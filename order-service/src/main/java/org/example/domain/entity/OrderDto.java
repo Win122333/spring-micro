@@ -1,2 +1,8 @@
-package org.example.domain.entity;public class OrderDto {
+package org.example.domain.entity;
+
+public record OrderDto (
+        Long id,
+        OrderStatus status
+){
+
 }

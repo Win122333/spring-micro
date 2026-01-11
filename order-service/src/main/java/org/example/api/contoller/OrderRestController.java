@@ -2,10 +2,9 @@ package org.example.api.contoller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.api.contoller.dto.CreateOrderRequestDto;
-import org.example.api.contoller.dto.OrderDto;
-import org.example.api.contoller.dto.OrderMapper;
-import org.example.domain.entity.OrderEntity;
+import org.example.api.http.order.CreateOrderRequestDto;
+import org.example.api.http.order.OrderDto;
+import org.example.domain.entity.OrderMapper;
 import org.example.domain.service.OrderService;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +35,14 @@ public class OrderRestController {
         var found = orderService.getById(id);
         return ResponseEntity.ok(orderMapper.toDto(found));
     }
-    @PostMapping
+    @PostMapping("/{id}/pay")
     @Transactional
     public ResponseEntity<OrderDto> save(
-            @RequestBody CreateOrderRequestDto entityDto
-            ) {
+            @PathVariable Long id,
+            @RequestBody OrderPaymentRequest request
+            ) throws ChangeSetPersister.NotFoundException {
         log.info("called save");
-        var create = orderService.create(entityDto);
+        var create = orderService.processPayment(id, request);
         return ResponseEntity.ok(orderMapper.toDto(create));
     }
 }

@@ -2,6 +2,7 @@ package org.example.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.api.http.order.OrderStatus;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;

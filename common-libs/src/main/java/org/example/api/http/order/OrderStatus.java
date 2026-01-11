@@ -1,9 +1,9 @@
-package org.example.domain.entity;
+package org.example.api.http.order;
 
 public enum OrderStatus {
     PENDING_PAYMENT,
     PAID,
     PAYMENT_FAILED,
-    PENDING_DELIVERY,
+    DELIVERY_ASSIGNED,
     DELIVERED
 }

@@ -1,4 +1,4 @@
-package org.example.api.contoller.dto;
+package org.example.api.http.order;
 
 import java.math.BigDecimal;
 

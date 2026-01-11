@@ -1,6 +1,7 @@
-package org.example.api.contoller.dto;
+package org.example.domain.entity;
 
-import org.example.domain.entity.OrderItemEntity;
+import org.example.api.http.order.OrderItemDto;
+import org.example.api.http.order.OrderItemRequestDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = OrderMapper.class)

@@ -19,6 +19,15 @@ import java.util.List;
 public class OrderRestController {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
+
+    @PostMapping
+    public OrderDto create(
+            @RequestBody CreateOrderRequestDto request
+    ) {
+        log.info("Creating order: request={}", request);
+        var saved = orderService.create(request);
+        return orderMapper.toDto(saved);
+    }
     @GetMapping
     public ResponseEntity<List<OrderDto>> getAll() {
         log.info("called getAll");

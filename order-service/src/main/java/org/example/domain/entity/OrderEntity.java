@@ -17,29 +17,29 @@ import java.util.Set;
 @NoArgsConstructor
 public class OrderEntity {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "customerId")
     private Long customerId;
 
-    @Column(name = "status", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private OrderStatus status;
-
     @Column(name = "address")
     private String address;
 
-    @Column(name = "eta_minutes")
-    private Integer etaMinutes;
-
-    @Column(name = "amount", precision = 19, scale = 2)
+    @Column(name = "total_amount", precision = 19, scale = 2)
     private BigDecimal totalAmount;
 
     @Column(name = "courier_name")
     private String courierName;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @Column(name = "eta_minutes")
+    private Integer etaMinutes;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Set<OrderItemEntity> items = new LinkedHashSet<>();
 }

@@ -3,12 +3,23 @@ package org.example.domain.entity;
 import org.example.api.contoller.OrderPaymentRequest;
 import org.example.api.http.order.CreateOrderRequestDto;
 import org.example.api.http.order.OrderDto;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = OrderItemMapper.class)
+@Mapper(
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        componentModel = MappingConstants.ComponentModel.SPRING
+)
 public interface OrderMapper {
-    OrderDto toDto(OrderEntity entity);
-    OrderEntity toEntity(CreateOrderRequestDto dto);
 
+    OrderEntity toEntity(CreateOrderRequestDto requestDto);
+
+    @AfterMapping
+    default void linkOrderItemEntities(@MappingTarget OrderEntity orderEntity) {
+        orderEntity
+                .getItems()
+                .forEach(orderItemEntity -> orderItemEntity.setOrder(orderEntity));
+    }
+
+    OrderDto toDto(OrderEntity orderEntity);
     OrderDto requestToDto(OrderPaymentRequest request);
 }

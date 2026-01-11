@@ -42,29 +42,20 @@ public class OrderService {
     }
     public OrderEntity create(CreateOrderRequestDto dto) {
         var entity = orderMapper.toEntity(dto);
-        setStatusPendingPaid(entity);
+        entity.setStatus(OrderStatus.PENDING_PAYMENT);
         calculatePurchase(entity);
-        calculateEtaMinutes(entity);
 
         return orderRepository.save(entity);
     }
 
-    private void calculateEtaMinutes(OrderEntity entity) {
-        entity.setEtaMinutes(ThreadLocalRandom.current().nextInt(20, 200));
-    }
-
-    private void setStatusPendingPaid(OrderEntity entity) {
-        entity.setStatus(OrderStatus.PENDING_PAYMENT);
-    }
-
     private void calculatePurchase(OrderEntity entity) {
         BigDecimal totalPrice = BigDecimal.ZERO;
-        for (OrderItemEntity it : entity.getItems()) {
-            var randomPrice = ThreadLocalRandom.current().nextDouble(100, 1500);
-            it.setPriceAtPurchase(BigDecimal.valueOf(randomPrice));
+        for (OrderItemEntity item : entity.getItems()) {
+            var randomPrice = ThreadLocalRandom.current().nextDouble(100, 5000);
+            item.setPriceAtPurchase(BigDecimal.valueOf(randomPrice));
 
-            totalPrice = it.getPriceAtPurchase()
-                    .multiply(BigDecimal.valueOf(it.getQuantity()))
+            totalPrice = item.getPriceAtPurchase()
+                    .multiply(BigDecimal.valueOf(item.getQuantity()))
                     .add(totalPrice);
         }
         entity.setTotalAmount(totalPrice);

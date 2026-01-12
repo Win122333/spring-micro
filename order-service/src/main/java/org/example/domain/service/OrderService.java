@@ -1,6 +1,7 @@
 package org.example.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.api.http.order.CreateOrderRequestDto;
 import org.example.api.http.payment.CreatePaymentRequestDto;
 import org.example.api.http.payment.CreatePaymentResponseDto;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -75,14 +76,16 @@ public class OrderService {
                         .build());
         if (response.status().equals(PaymentStatus.PAID_SUCCESS)) {
             entity.setStatus(OrderStatus.PAID);
+            sendOrderPaidEvent(entity, response);
         }
         else {
             entity.setStatus(OrderStatus.PAYMENT_FAILED);
         }
-        sendOrderPaidEvent(entity, response);
+
         return orderRepository.save(entity);
     }
     private void sendOrderPaidEvent(OrderEntity entity, CreatePaymentResponseDto responseDto) {
+        log.info("sendOrderPaidEvent to kafka to topic {}", topic);
         kafkaTemplate.send(topic, entity.getId(), OrderPaidEvent.builder()
                         .orderId(entity.getId())
                         .amount(entity.getTotalAmount())
@@ -91,7 +94,8 @@ public class OrderService {
                 .build());
     }
     public void updateAssignDelivery(DeliveryAssignedEvent event) {
-        var found = orderRepository.findById(event.orderId()).orElseThrow(() -> new RuntimeException(""));
+        var found = orderRepository.findById(event.orderId()).orElseThrow(
+                () -> new RuntimeException("не найдено с id " + event.orderId()));
         found.setStatus(OrderStatus.DELIVERY_ASSIGNED);
         found.setCourierName(event.courierName());
         found.setEtaMinutes(event.etaMinutes());

@@ -6,11 +6,15 @@ spring:
     url: jdbc:postgresql://localhost/orders
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
   kafka:
     consumer:
       group-id: delivery-service-group
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "org.example.api.kafka"
     bootstrap-servers: localhost:9092
 
 

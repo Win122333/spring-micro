@@ -27,6 +27,7 @@ public class DeliveryService {
         entity.setOrderId(orderId);
         entity.setCourierName("courier-" + ThreadLocalRandom.current().nextInt(100));
         entity.setEtaMinutes(ThreadLocalRandom.current().nextInt(40, 200));
+        sendDeliveryEvent(entity);
         return deliveryRepository.save(entity);
     }
     private void sendDeliveryEvent(DeliveryEntity entity) {

@@ -11,8 +11,11 @@ spring:
   kafka:
     consumer:
       group-id: order-service-group
+      bootstrap-servers: localhost:9092
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.LongSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     bootstrap-servers: localhost:9092
-
 
 server:
   port: 8082

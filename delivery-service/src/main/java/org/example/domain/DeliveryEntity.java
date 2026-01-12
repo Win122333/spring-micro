@@ -2,7 +2,7 @@ package org.example.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-@Table(name = "order_")
+@Table(name = "delivery")
 @Entity
 @Setter
 @Getter

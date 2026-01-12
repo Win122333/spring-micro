@@ -16,14 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
-    private final PaymentMapper paymentMapper;
     @PostMapping
     public CreatePaymentResponseDto createPayment(
-            @RequestBody CreatePaymentRequestDto requestDto
-            ) {
-        log.info("called createPayment with {}", requestDto);
-        return paymentMapper.entityToResponse(
-                paymentService.createPayment(paymentMapper.requestToEntity(requestDto)));
-
+            @RequestBody CreatePaymentRequestDto request
+    ) {
+        log.info("Received request: paymentRequest={}", request);
+        return paymentService.makePayment(request);
     }
 }

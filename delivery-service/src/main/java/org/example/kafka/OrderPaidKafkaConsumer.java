@@ -22,7 +22,7 @@ public class OrderPaidKafkaConsumer {
             containerFactory = "orderPaidEventListenerFactory"
     )
     public void listen(OrderPaidEvent event) {
-        log.info("listen from");
+        log.info("получили orderPaidEvent");
 
         deliveryService.save(event);
         log.info("success delivery");
